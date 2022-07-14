@@ -1,4 +1,4 @@
-use crate::{AppState, Movable, Velocity, WindowSize};
+use crate::{AppState, Movable, Velocity};
 use bevy::prelude::*;
 
 pub struct MovementPlugin;
@@ -11,7 +11,7 @@ impl Plugin for MovementPlugin {
 
 fn movement_system(
     mut commands: Commands,
-    win_size: Res<WindowSize>,
+    windows: Res<Windows>,
     mut query: Query<(Entity, &Velocity, &mut Transform, &Movable)>,
 ) {
     const TIME_STEP: f32 = 1. / 60.;
@@ -26,10 +26,10 @@ fn movement_system(
         if movable.auto_despawn {
             const MARGIN: f32 = 200.;
 
-            if translation.y > win_size.h / 2. + MARGIN
-                || translation.y < -win_size.h / 2. - MARGIN
-                || translation.x > win_size.w / 2. + MARGIN
-                || translation.x < -win_size.w / 2. - MARGIN
+            let window = windows.primary();
+
+            if translation.y.abs() > window.height() / 2. + MARGIN
+                || translation.x.abs() > window.width() / 2. + MARGIN
             {
                 commands.entity(entity).despawn();
             }

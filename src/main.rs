@@ -45,11 +45,6 @@ const SCORE_FONT: &str = "fonts/LED Dot-Matrix.ttf";
 const BUTTON_FONT: &str = "fonts/Instruction.otf";
 
 // Resources
-pub struct WindowSize {
-    pub w: f32,
-    pub h: f32,
-}
-
 struct GameTextures {
     player: Handle<Image>,
     lasergun_bullet: Handle<Image>,
@@ -124,44 +119,10 @@ fn setup_system(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-    mut windows: ResMut<Windows>,
-    // mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     // Cameras
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
     commands.spawn_bundle(UiCameraBundle::default());
-
-    // Window Size
-    let window = windows.get_primary_mut().unwrap();
-
-    commands.insert_resource(WindowSize {
-        w: window.width(),
-        h: window.height(),
-    });
-
-    // let background_image: Handle<Image> = ;
-    // commands
-    //     .spawn_bundle(SpriteBundle {
-    //         // material: materials.add(background_image.into()),
-    //         texture: background_image.clone(),
-    //         ..default()
-    //     });
-    // commands
-    //     .spawn_bundle(NodeBundle {
-    //     style: Style {
-    //         size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
-    //         // align_items: AlignItems::Center,
-    //         // justify_content: JustifyContent::Center,
-    //         ..default()
-    //     },
-    //     image: background_image.clone().into(),
-    //     transform: Transform {
-    //         translation: Vec3::new(0., 0., -1.),
-    //         // scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
-    //         ..default()
-    //     },
-    //     ..default()
-    // });
 
     // create explosion texture atlas
     let texture_handle = asset_server.load(EXPLOSION_SHEET);

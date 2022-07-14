@@ -1,5 +1,5 @@
 use crate::components::BackgroundTop;
-use crate::{AppState, GameTextures, Movable, Velocity, WindowSize};
+use crate::{AppState, GameTextures, Movable, Velocity};
 use bevy::prelude::*;
 
 pub const BACKGROUND_SPRITE: &str = "background.png";
@@ -18,11 +18,13 @@ impl Plugin for BackgroundPlugin {
     }
 }
 
-fn background_spawn_system(mut commands: Commands, win_size: Res<WindowSize>) {
+fn background_spawn_system(mut commands: Commands, windows: Res<Windows>) {
+    let window = windows.primary();
+
     commands
         .spawn_bundle(SpriteBundle {
             transform: Transform {
-                translation: Vec3::new(0., -(win_size.h + BACKGROUND_SIZE.1) / 2., 0.),
+                translation: Vec3::new(0., -(window.height() + BACKGROUND_SIZE.1) / 2., 0.),
                 ..default()
             },
             ..default()
@@ -39,12 +41,14 @@ fn background_spawn_system(mut commands: Commands, win_size: Res<WindowSize>) {
 
 fn background_scrolling_system(
     mut commands: Commands,
-    win_size: Res<WindowSize>,
+    windows: Res<Windows>,
     game_textures: Res<GameTextures>,
     mut query: Query<&mut Transform, With<BackgroundTop>>,
 ) {
     if let Ok(mut tf) = query.get_single_mut() {
-        if tf.translation.y < (win_size.h + BACKGROUND_SIZE.1) / 2. {
+        let window = windows.primary();
+
+        if tf.translation.y < (window.height() + BACKGROUND_SIZE.1) / 2. {
             let mut spawn_tile = |offset: f32| {
                 commands
                     .spawn_bundle(SpriteBundle {
@@ -62,17 +66,18 @@ fn background_scrolling_system(
                     });
             };
 
+            // Spawn middle tile.
             spawn_tile(0.);
 
             let mut offset = BACKGROUND_SIZE.0;
 
-            while offset < win_size.w / 2. {
+            while offset <= (window.width() + BACKGROUND_SIZE.0) / 2. {
                 spawn_tile(offset);
                 spawn_tile(-offset);
                 offset += BACKGROUND_SIZE.0;
             }
 
-            tf.translation.y += 256.;
+            tf.translation.y += BACKGROUND_SIZE.1;
         }
     }
 }

@@ -1,7 +1,7 @@
 use crate::components::Enemy;
 use crate::{
     AppState, EnemyCount, FromEnemy, GameTextures, Laser, Movable, Rotated, SpriteSize, Velocity,
-    Wave, WindowSize, SPRITE_SCALE,
+    Wave, SPRITE_SCALE,
 };
 use bevy::ecs::schedule::ShouldRun;
 use bevy::prelude::*;
@@ -34,17 +34,18 @@ impl Plugin for EnemyPlugin {
 fn enemy_spawn_system(
     mut commands: Commands,
     game_textures: Res<GameTextures>,
-    win_size: Res<WindowSize>,
+    windows: Res<Windows>,
     mut enemy_count: ResMut<EnemyCount>,
     wave: Res<Wave>,
 ) {
-    // compute the random position
     const MARGIN: f32 = 200.;
     const MARGIN_BOTTOM: f32 = 80.;
 
+    let window = windows.primary();
+
     let mut rng = thread_rng();
-    let w_span = win_size.w / 2. - MARGIN;
-    let h_span = win_size.h / 2. - MARGIN;
+    let w_span = window.width() / 2. - MARGIN;
+    let h_span = window.height() / 2. - MARGIN;
 
     if enemy_count.0 == 0 {
         for _ in 0..wave.0 {

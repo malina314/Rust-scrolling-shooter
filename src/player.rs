@@ -1,6 +1,6 @@
 use crate::components::{Movable, Player, SpriteSize, Velocity};
 use crate::weapons::WeaponType;
-use crate::{AppState, GameTextures, WindowSize, SPRITE_SCALE};
+use crate::{AppState, GameTextures, SPRITE_SCALE};
 use bevy::prelude::*;
 
 pub const PLAYER_SPRITE: &str = "player_a_01.png";
@@ -44,9 +44,10 @@ impl Plugin for PlayerPlugin {
 fn player_spawn_system(
     mut commands: Commands,
     game_textures: Res<GameTextures>,
-    window_size: ResMut<WindowSize>,
+    windows: Res<Windows>,
 ) {
-    let bottom = -window_size.h / 2.;
+    let window = windows.primary();
+    let bottom = -window.height() / 2.;
 
     commands
         .spawn_bundle(SpriteBundle {
