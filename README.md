@@ -1,5 +1,7 @@
 # Scrolling shooter
 
+![demo](/assets/demo.gif)
+
 ## Autorzy
 - Mateusz Malinowski (gr 4)
 
